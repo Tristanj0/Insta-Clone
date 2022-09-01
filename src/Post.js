@@ -5,8 +5,8 @@ import { db } from './firebase';
 
 
 function Post({postId, username, caption, imageUrl}) {
-  const [comment, setComment] = useState([]);
-  const [comments, setComments] = useState('');
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     let unsubscribe;
@@ -16,7 +16,7 @@ function Post({postId, username, caption, imageUrl}) {
         .doc(postId)
         .collection("comments")
         .onSnapshot((snapshot) => {
-          setComments(snapshot.docs.map((doc) => doc.data()));
+         setComments(snapshot.docs.map((doc) => doc.data()));
         });
     }
 
@@ -40,10 +40,18 @@ function Post({postId, username, caption, imageUrl}) {
          <h3>{username}</h3>
       </div>
         
-     <img className="post__image" src={imageUrl}alt=""/>
+     <img className="post__image" src={imageUrl} alt=""/>
      
      
       <h4 className="post__text"><strong>{username}</strong> {caption}</h4>
+      
+    <div className="post__comments">
+     {comments.map((comment) => (
+      <p>
+        <b>{comment.username}</b> {comment.text}
+      </p>
+     ))}
+    </div>
 
       <form className="post__commentBox">
       <input 
@@ -54,8 +62,8 @@ function Post({postId, username, caption, imageUrl}) {
             onChange={(e) => setComment(e.target.value)}
           />
           <button
-            disabled={!comment}
             className="post__button"
+            disabled={!comment}
             type="submit"
             onClick={postComment}
           >
